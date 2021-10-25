@@ -9,14 +9,13 @@ try:
 
     cursor = connection.cursor()
     cursor.execute("SELECT RESOURCE_URL FROM resource")
-    originalURL = cursor.fetchall()[0]
-    originalStrURL = ''.join(map(str, originalURL))
-    #print(originalStrURL)
+    original_url = cursor.fetchall()[0]
+    original_str_url = ''.join(map(str, original_url))
     #connection.close()
 
 
-    mySql_Create_Table_Query = """CREATE TABLE resource (
-                                 RESOURCE_ID bigint(20) NOT NULL,
+    mySql_create_table_query = """CREATE TABLE resource (
+                                 RESOURCE_ID bigint(20) NOT NULL AUTO_INCREMENT,
                                  RESOURCE_NAME varchar(255) NULL,
                                  RESOURCE_URL varchar(255) NULL,
                                  top_tag varchar(255) NOT NULL,
@@ -26,12 +25,12 @@ try:
                                  PRIMARY KEY (RESOURCE_ID)) """
 
     cursor = connection.cursor()
-    result = cursor.execute(mySql_Create_Table_Query)
-    print("resource Table created successfully ")
+    result = cursor.execute(mySql_create_table_query)
+    print("resource Table created successfully")
 
 
-    mySql_Create_Table_Query = """CREATE TABLE items ( 
-                                 id int(11) NOT NULL,
+    mySql_create_table_query = """CREATE TABLE items ( 
+                                 id int(11) NOT NULL AUTO_INCREMENT,
                                  res_id int(11) NOT NULL,
                                  link varchar(255) NOT NULL,
                                  title text NOT NULL,
@@ -42,8 +41,8 @@ try:
                                  PRIMARY KEY (id)) """
 
     cursor = connection.cursor()
-    result = cursor.execute(mySql_Create_Table_Query)
-    print("items Table created successfully ")
+    result = cursor.execute(mySql_create_table_query)
+    print("items Table created successfully")
 
 except mysql.connector.Error as error:
     print("Failed to create table in MySQL: {}".format(error))
@@ -55,20 +54,20 @@ finally:
 
 
 
-def insert_varibles_into_table(id, res_id, link, title, content, nd_date, s_date, not_date):
+def insert_item(res_id, link, title, content, nd_date, s_date, not_date):
     try:
-        connection = mysql.connector.connect(host='localhost',
+        connection = mysql.connector.connect(host='localhost', #connect
                                              database='parser',
                                              user='root',
                                              password='MYSQL')
         cursor = connection.cursor()
-        MySql_Insert_Items_Query = """INSERT INTO Items (id, res_id, link, title, content, nd_date, s_date, not_date)
+        mySql_insert_items_query = """INSERT INTO Items (res_id, link, title, content, nd_date, s_date, not_date)
                                VALUES
-                               (%s, %s, %s, %s, %s, %s, %s, %s) """
-        record = (id, res_id, link, title, content, nd_date, s_date, not_date)
-        cursor.execute(MySql_Insert_Items_Query, record)
+                               (%s, %s, %s, %s, %s, %s, %s) """
+        record = (res_id, link, title, content, nd_date, s_date, not_date)
+        cursor.execute(mySql_insert_items_query, record)
         connection.commit()
-        print("Record inserted successfully into Laptop table")
+        print("Record inserted successfully into Items table")
 
     except mysql.connector.Error as error:
         print("Failed to insert into MySQL table {}".format(error))
