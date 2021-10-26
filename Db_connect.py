@@ -1,12 +1,10 @@
 import mysql.connector
 from mysql.connector import Error
 
-try:
-    connection = mysql.connector.connect(host='localhost',
-                                         database='parser',
-                                         user='root',
-                                         password='MYSQL')
+CONNECTION = {'host': 'localhost', 'database': 'parser','user': 'root', 'password': 'MYSQL'}
 
+try:
+    connection = mysql.connector.connect(**CONNECTION)
     cursor = connection.cursor()
     cursor.execute("SELECT RESOURCE_URL FROM resource")
     original_url = cursor.fetchall()[0]
@@ -24,7 +22,6 @@ try:
                                  date_cut varchar(255) NOT NULL,
                                  PRIMARY KEY (RESOURCE_ID)) """
 
-    cursor = connection.cursor()
     result = cursor.execute(mySql_create_table_query)
     print("resource Table created successfully")
 
@@ -40,8 +37,6 @@ try:
                                  not_date date NOT NULL,              
                                  PRIMARY KEY (id)) """
 
-    cursor = connection.cursor()
-    result = cursor.execute(mySql_create_table_query)
     print("items Table created successfully")
 
 except mysql.connector.Error as error:
@@ -56,10 +51,7 @@ finally:
 
 def insert_item(res_id, link, title, content, nd_date, s_date, not_date):
     try:
-        connection = mysql.connector.connect(host='localhost', #connect
-                                             database='parser',
-                                             user='root',
-                                             password='MYSQL')
+        connection = mysql.connector.connect(**CONNECTION)
         cursor = connection.cursor()
         mySql_insert_items_query = """INSERT INTO Items (res_id, link, title, content, nd_date, s_date, not_date)
                                VALUES

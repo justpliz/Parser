@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="25c02e9b-cc7d-439c-a5ab-3e095a8bec4f">
-        <schema name="parser" object-types="table, view, procedure, function" />
+        <schema name="parser" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>

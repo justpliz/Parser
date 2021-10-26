@@ -18,7 +18,7 @@ def get_html(url, params = None):
 def get_items(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('li', class_='block-infinite__item')
-    return  items
+    return items
 
 def get_titles(items):
     news = []
@@ -31,42 +31,46 @@ def get_titles(items):
     return news
 
 
-def get_content(news, count):
-    response = urllib.request.urlopen(news[count]['link'])
+def get_content(news, count_url):
+    response = urllib.request.urlopen(news[count_url]['link'])
     links_url = response.read()
     soup = BeautifulSoup(links_url, 'html.parser')
     items = soup.find_all('article', class_='article')
     output_content = []
     for item in items:
-        output_content.append({
+        output_content.extend({
             'content': item.find_all('p', class_='align-left formatted-body__paragraph'),
             'image': item.find_all('img', class_='inline-picture'),
         })
-        return output_content
+    return output_content
 
 
 def parse_news():
-    html = get_html(url)#responce atribute
-    if html.status_code == 200: #200 в константу
+    html = get_html(url)
+    if html.status_code == 200:
         items = get_items(html.text)
-        count = len(items)
-        for i in items:
-            count += 1
-        news = get_titles(items, count)
-        output_content = get_content(news)
+        news = get_titles(items)
+        count_url = 0
+        for i in range(len(items)):
+            output_content = get_content(news, count_url)
+            #print(output_content)
+            count_url += 1
 
-        #news += output_content
+        print(len(news))
+        print(len(output_content))
+        # print(news[12])
+        # print(output_content[12])
 
+        #content = ''.join(map(str, output_content[0]['content']))
         link = ''.join(map(str, news[0]['link']))
         title = ''.join(map(str, news[0]['title']))
-        content = ''.join(map(str, output_content[0]['content']))
         nd_date = ''.join(map(str, news[0]['nd_date']))
         nd_date = parse(nd_date)
         not_date = nd_date.strftime("%Y-%m-%d")
         nd_date = time.mktime(nd_date.timetuple())
         s_date = time.mktime(datetime.now().timetuple())
+        # insert_item(1, link, title, content, nd_date, s_date, not_date)
 
-        #insert_item(1, link, title, content, nd_date, s_date, not_date)
     else:
         print('Error') #+ статус код
 
