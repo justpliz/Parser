@@ -36,13 +36,13 @@ def get_content(news, count_url):
     links_url = response.read()
     soup = BeautifulSoup(links_url, 'html.parser')
     items = soup.find_all('article', class_='article')
-    output_content = []
     for item in items:
-        output_content.extend({
+        output_content = []
+        output_content.append({
             'content': item.find_all('p', class_='align-left formatted-body__paragraph'),
             'image': item.find_all('img', class_='inline-picture'),
         })
-    return output_content
+        return output_content
 
 
 def parse_news():
@@ -51,25 +51,23 @@ def parse_news():
         items = get_items(html.text)
         news = get_titles(items)
         count_url = 0
+
+        content_news = []
         for i in range(len(items)):
             output_content = get_content(news, count_url)
-            #print(output_content)
+            content_news.append(output_content)
+
+            content = ''.join(map(str, content_news[count_url]))
+            link = ''.join(map(str, news[count_url]['link']))
+            title = ''.join(map(str, news[count_url]['title']))
+            nd_date = ''.join(map(str, news[count_url]['nd_date']))
+            nd_date = parse(nd_date)
+            not_date = nd_date.strftime("%Y-%m-%d")
+            nd_date = time.mktime(nd_date.timetuple())
+            s_date = time.mktime(datetime.now().timetuple())
+            insert_item(1, link, title, content, nd_date, s_date, not_date)
+
             count_url += 1
-
-        print(len(news))
-        print(len(output_content))
-        # print(news[12])
-        # print(output_content[12])
-
-        #content = ''.join(map(str, output_content[0]['content']))
-        link = ''.join(map(str, news[0]['link']))
-        title = ''.join(map(str, news[0]['title']))
-        nd_date = ''.join(map(str, news[0]['nd_date']))
-        nd_date = parse(nd_date)
-        not_date = nd_date.strftime("%Y-%m-%d")
-        nd_date = time.mktime(nd_date.timetuple())
-        s_date = time.mktime(datetime.now().timetuple())
-        # insert_item(1, link, title, content, nd_date, s_date, not_date)
 
     else:
         print('Error') #+ статус код

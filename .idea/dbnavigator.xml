@@ -33,6 +33,7 @@
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="25c02e9b-cc7d-439c-a5ab-3e095a8bec4f">
       <console name="Conection" type="STANDARD" schema="parser" session="Main"><![CDATA[use parser;
+DELETE FROM items; 
 SELECT * FROM items;]]></console>
     </connection>
   </component>
