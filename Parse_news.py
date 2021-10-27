@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 
 from Db_connect import original_str_url
+from Db_connect import res_id
 from Db_connect import insert_item
 from Db_connect import cursor_create
 
@@ -17,16 +18,16 @@ def get_html(url, params = None):
     return requests.get(url, headers=HEADERS, params=params)
 
 def html_atributes():
-    html_title_tag = 'h3' or 'div',
-    html_title_class = 'preview-title preview-title--medium' or 'title',
-    html_link_tag = 'a',
-    html_link_class = 'article-preview-mixed' or 'title',
-    html_nd_date_tag = 'time',
-    html_nd_date_class = 'preview-info-item-secondary',
-    html_content_tag = 'p',
-    html_content_class = 'align-left formatted-body__paragraph' or 'text-align: justify;',
-    html_image_tag = 'img' or 'div',
-    html_image_class = 'inline-picture' or 'figure-content',
+    html_title_tag = ('h3', 'div'),
+    html_title_class = ('preview-title preview-title--medium', 'title'),
+    html_link_tag = ('a'),
+    html_link_class = ('article-preview-mixed', 'title'),
+    html_nd_date_tag = ('time'),
+    html_nd_date_class = ('preview-info-item-secondary'),
+    html_content_tag = ('p'),
+    html_content_class = ('align-left formatted-body__paragraph', 'text-align: justify;'),
+    html_image_tag = ('img', 'div'),
+    html_image_class = ('inline-picture', 'figure-content'),
     html_tags = (html_title_tag, html_title_class, html_link_tag, html_link_class, html_nd_date_tag,
                  html_nd_date_class, html_content_tag, html_content_class, html_image_tag,html_image_class)
     return html_tags
@@ -54,7 +55,7 @@ def get_content(news, count_url):
     response = urllib.request.urlopen(news[count_url]['link'])
     links_url = response.read()
     soup = BeautifulSoup(links_url, 'html.parser')
-    items = soup.find_all('article' or 'div', class_='article' or 'col-12 col-lg-8')
+    items = soup.find_all('article', class_='article' or 'col-12 col-lg-8')
     html_tags = html_atributes()
     for item in items:
         output_content = []
@@ -87,7 +88,7 @@ def parse_news():
             not_date = nd_date.strftime("%Y-%m-%d")
             nd_date = time.mktime(nd_date.timetuple())
             s_date = time.mktime(datetime.now().timetuple())
-            insert_item(cursor, 1, link, title, content, nd_date, s_date, not_date)
+            insert_item(cursor, res_id, link, title, content, nd_date, s_date, not_date)
 
             count_url += 1
 

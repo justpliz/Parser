@@ -15,8 +15,12 @@ try:
     cursor = cursor_and_connection[0]
     connection = cursor_and_connection[1]
     cursor.execute("SELECT RESOURCE_URL FROM resource")
-    original_url = cursor.fetchall()[0]
+    original_url = cursor.fetchall()[0]     #индкес сайта для парсинга в таблице resource
     original_str_url = ''.join(map(str, original_url))
+    cursor.execute("SELECT RESOURCE_ID FROM resource")
+    res_id = cursor.fetchall()[0]       #индкес сайта для парсинга в таблице resource
+    res_id = ''.join(map(str, res_id))
+    print(res_id)
     connection.close()
 
 
