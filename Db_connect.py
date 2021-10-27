@@ -3,13 +3,21 @@ from mysql.connector import Error
 
 CONNECTION = {'host': 'localhost', 'database': 'parser','user': 'root', 'password': 'MYSQL'}
 
-try:
+def cursor_create():
     connection = mysql.connector.connect(**CONNECTION)
     cursor = connection.cursor()
+    connection_and_cursor = (cursor, connection)
+    return connection_and_cursor
+
+
+try:
+    cursor_and_connection = cursor_create()
+    cursor = cursor_and_connection[0]
+    connection = cursor_and_connection[1]
     cursor.execute("SELECT RESOURCE_URL FROM resource")
     original_url = cursor.fetchall()[0]
     original_str_url = ''.join(map(str, original_url))
-    #connection.close()
+    connection.close()
 
 
     mySql_create_table_query = """CREATE TABLE resource (
@@ -36,11 +44,13 @@ try:
                                  s_date int(11) NOT NULL,
                                  not_date date NOT NULL,              
                                  PRIMARY KEY (id)) """
-
+    result = cursor.execute(mySql_create_table_query)
+    connection.commit()
     print("items Table created successfully")
 
 except mysql.connector.Error as error:
     print("Failed to create table in MySQL: {}".format(error))
+
 finally:
     if connection.is_connected():
         cursor.close()
@@ -49,16 +59,13 @@ finally:
 
 
 
-def insert_item(res_id, link, title, content, nd_date, s_date, not_date):
+def insert_item(cursor, res_id, link, title, content, nd_date, s_date, not_date):
     try:
-        connection = mysql.connector.connect(**CONNECTION)
-        cursor = connection.cursor()
         mySql_insert_items_query = """INSERT INTO Items (res_id, link, title, content, nd_date, s_date, not_date)
                                VALUES
                                (%s, %s, %s, %s, %s, %s, %s) """
         record = (res_id, link, title, content, nd_date, s_date, not_date)
         cursor.execute(mySql_insert_items_query, record)
-        connection.commit()
         print("Record inserted successfully into Items table")
 
     except mysql.connector.Error as error:
