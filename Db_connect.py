@@ -20,7 +20,6 @@ try:
     cursor.execute("SELECT RESOURCE_ID FROM resource")
     res_id = cursor.fetchall()[0]       #индкес сайта для парсинга в таблице resource
     res_id = ''.join(map(str, res_id))
-    print(res_id)
     connection.close()
 
 

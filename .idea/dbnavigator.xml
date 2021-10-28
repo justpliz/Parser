@@ -26,7 +26,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="25c02e9b-cc7d-439c-a5ab-3e095a8bec4f">
-        <schema name="parser" object-types="table, view, procedure, function, constraint, index, column, dataset trigger" />
+        <schema name="parser" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>
@@ -120,7 +120,7 @@ SELECT * FROM items;]]></console>
           <session-management value="true" />
           <ddl-file-binding value="true" />
           <database-logging value="false" />
-          <connect-automatically value="true" />
+          <connect-automatically value="false" />
           <restore-workspace value="true" />
           <restore-workspace-deep value="true" />
           <environment-type value="default" />
